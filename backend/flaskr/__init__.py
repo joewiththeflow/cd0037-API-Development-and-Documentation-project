@@ -50,7 +50,7 @@ def create_app(test_config=None):
     def retrieve_categories():
         selection = Category.query.order_by(Category.id).all()
         
-        categories = [category.format() for category in selection]
+        categories = {category.id: category.type for category in selection}
 
         return jsonify({
             "success": True,
@@ -74,7 +74,7 @@ def create_app(test_config=None):
     def retrieve_questions():
         selection = Question.query.order_by(Question.id).all()
         current_questions = paginate_questions(request, selection)
-        categories = [category.format() for category in Category.query.order_by(Category.id).all()]
+        categories = {category.id: category.type for category in Category.query.order_by(Category.id).all()}
 
         if len(current_questions) == 0:
             abort(404)
