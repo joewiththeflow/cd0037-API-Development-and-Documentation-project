@@ -197,6 +197,9 @@ def create_app(test_config=None):
     def retrieve_questions_by_category(category_id):
         selection = Question.query.order_by(Question.id).filter(
             Question.category == category_id)
+
+        if selection.count() == 0:
+            abort(404)
         
         current_questions = paginate_questions(request, selection)
 
@@ -224,13 +227,24 @@ def create_app(test_config=None):
         body = request.get_json()
 
         previous_questions = body.get("previous_questions", []) # [] if no previous Qs
-        quiz_category = body.get("quiz_category", None)
+        quiz_category = body.get("quiz_category", {'id': 0, 'type': 'click'})
+        category_id = int(quiz_category['id'])
+
+        # Resource not found if unknown category and not 0 (i.e. all Qs)
+        categories = Category.query.all()
+        category_ids = [category.id for category in categories]
+        if (category_id not in category_ids) and category_id != 0:
+            abort(404)
         
         try:
-            questions_left_in_category = Question.query.filter(
-                Question.category == quiz_category).filter(
-                Question.id.not_in(previous_questions))
-           
+            if category_id == 0:    # All Qs
+                questions_left_in_category = Question.query.filter(
+                Question.id.notin_(previous_questions))
+            else:
+                questions_left_in_category = Question.query.filter(
+                Question.category == category_id).filter(
+                Question.id.notin_(previous_questions))
+
             if questions_left_in_category.count() > 0:
                 formatted_questions = [question.format() for question in questions_left_in_category]
                 question = random.choice(formatted_questions)
@@ -255,6 +269,13 @@ def create_app(test_config=None):
         return (
             jsonify({"success": False, "error": 404, "message": "resource not found"}),
             404,
+        )
+
+    @app.errorhandler(405)
+    def method_not_allowed(error):
+        return (
+            jsonify({"success": False, "error": 405, "message": "method not allowed"}),
+            405,
         )
 
     @app.errorhandler(422)
