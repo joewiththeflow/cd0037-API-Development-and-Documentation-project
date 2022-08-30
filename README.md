@@ -54,7 +54,7 @@ In order to run tests navigate to the backend folder and run the following comma
 ```
 dropdb trivia_test
 createdb trivia_test
-psql bookshelf_test < trivia.psql
+psql trivia_test < trivia.psql
 python test_flaskr.py
 ```
 The first time you run the tests, omit the dropdb command. 
