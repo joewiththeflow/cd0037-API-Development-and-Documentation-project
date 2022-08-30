@@ -89,7 +89,8 @@ The API will return three error types when requests fail:
     - Returns: An object with a single key, categories, that contains a dictionary of id: category_string key-value pairs. 
 - Sample: `curl http://127.0.0.1:5000/categories`
 
-``` {
+``` 
+{
   "categories": {
     "1": "Science", 
     "2": "Art", 
@@ -109,7 +110,8 @@ The API will return three error types when requests fail:
     - Returns: dictionary including categories, current category, total_questions, success value, as well as questions paginated in groups of 10. 
 - Sample: `curl http://127.0.0.1:5000/questions`
 
-``` {
+``` 
+{
   "categories": {
     "1": "Science", 
     "2": "Art", 
@@ -203,7 +205,8 @@ The API will return three error types when requests fail:
     - Returns: dictionary including success value and deleted question ID. 
 - Sample: `curl -X DELETE http://127.0.0.1:5000/questions/16`
 
-``` {
+``` 
+{
   "deleted": 16, 
   "success": true
 }
@@ -216,7 +219,8 @@ The API will return three error types when requests fail:
     - Returns: (dictionary including created question ID, success value, total questions and questions paginated in groups of 10) OR (questions matching the search term and the number of matching questions with success value).
 - Sample: `curl -X POST -H "Content-Type: application/json" -d '{"question":"What is the capital of England?", "answer":"London", "category":"3", "difficulty":"4"}' 'http://127.0.0.1:5000/questions?page=2'`
 
-``` {
+``` 
+{
   "created": 28, 
   "questions": [
     {
@@ -290,7 +294,8 @@ The API will return three error types when requests fail:
 
 - Sample: `curl -X POST -H "Content-Type: application/json" -d '{"searchTerm":"ici"}' http://127.0.0.1:5000/questions`
 
-``` {
+``` 
+{
   "current_category": null, 
   "questions": [
     {
@@ -320,7 +325,8 @@ The API will return three error types when requests fail:
     - Returns: dictionary of matching questions, each with a question, answer, category, difficulty and id, as well as success value and number of questions in category. 
 - Sample: `curl http://127.0.0.1:5000/categories/1/questions`
 
-``` {
+``` 
+{
   "current_category": null, 
   "questions": [
     {
@@ -358,7 +364,8 @@ The API will return three error types when requests fail:
     - Returns: .
 - Sample: `curl -X POST -H "Content-Type: application/json" -d '{"previous_questions":[13,15], "quiz_category":{"id":3, "type":"Geography"}}' http://127.0.0.1:5000/quizzes`
 
-``` {
+``` 
+{
   "question": {
     "answer": "The Palace of Versailles", 
     "category": 3, 
