@@ -108,7 +108,7 @@ class TriviaTestCase(unittest.TestCase):
 
 
     def test_404_retrieve_questions_beyond_valid_page(self):
-        res = self.client().get("/books?page=1000")
+        res = self.client().get("/questions?page=1000")
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -119,7 +119,7 @@ class TriviaTestCase(unittest.TestCase):
     # DELETE QUESTION
 
     # Can only run this once successfully, then need to dropdb and recreate
-    # def test_delete_book(self):
+    # def test_delete_question(self):
     #     res = self.client().delete('/questions/2')
     #     data = json.loads(res.data)
 
@@ -176,13 +176,24 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data['total_questions'])
 
     
-    def test_get_book_search_without_results(self):
-        res = self.client().post("/books", json={"searchTerm": "mississippi"})
+    def test_get_question_search_without_results(self):
+        res = self.client().post("/questions", json={"searchTerm": "mississippi"})
         data = json.loads(res.data)
 
-        self.assertEqual(res.status_code, 404)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data["success"], True)
+        self.assertEqual(len(data["questions"]), 0)
+        self.assertEqual(data['total_questions'], 0)
+
+
+    def test_405_get_question_search_with_wrong_method(self):
+        res = self.client().patch("/questions", json={"searchTerm": "mississippi"})
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 405)
         self.assertEqual(data["success"], False)
-        self.assertEqual(data['message'], "resource not found")
+        self.assertEqual(data["message"], "method not allowed")
+       
 
 
     # GET QUESTIONS BY CATEGORY ID
@@ -229,7 +240,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data["question"])
 
 
-    def test_get_question_for_category_unknown(self):
+    def test_404_get_question_for_category_unknown(self):
         res = self.client().post("/quizzes", json=self.next_question_category_unknown)
         data = json.loads(res.data)
 
